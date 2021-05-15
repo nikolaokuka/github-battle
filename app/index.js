@@ -1,10 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import Popular from './components/Popular'
 import './index.css'
 
 function App () {
   return (
-    <h1>Github Battle</h1>
+    <div className='container'>
+      <Popular />
+    </div>
   )
 }
 
