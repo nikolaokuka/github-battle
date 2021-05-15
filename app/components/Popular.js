@@ -1,4 +1,29 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
+
+function LanguagesNav({ selected, updateLanguage }) {
+  const languages = ['All', 'JavaScript', 'Ruby', 'Java', 'CSS', 'Python']
+
+  return (
+    <ul className='flex-center'>
+      {languages.map((language) => (
+        <li key={language}>
+          <button
+            onClick={() => updateLanguage(language)}
+            style={selected === language ? { color: 'crimson' } : null}
+            className='btn-clear nav-link'>
+            {language}
+          </button>
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+LanguagesNav.propTypes = {
+  selected: PropTypes.string.isRequired,
+  updateLanguage: PropTypes.func.isRequired
+}
 
 export default class Popular extends Component {
   state = {
@@ -10,21 +35,15 @@ export default class Popular extends Component {
   }
 
   render() {
-    const languages = ['All', 'JavaScript', 'Ruby', 'Java', 'CSS', 'Python']
+    const { selected } = this.state
 
     return (
-      <ul className='flex-center'>
-        {languages.map((language) => (
-          <li key={language}>
-            <button
-              onClick={() => this.updateLanguage(language)}
-              style={this.state.selected === language ? { color: 'crimson' } : null}
-              className='btn-clear nav-link'>
-              {language}
-            </button>
-          </li>
-        ))}
-      </ul>
+      <>
+        <LanguagesNav
+          selected={selected}
+          updateLanguage={this.updateLanguage}
+        />
+      </>
     )
   }
 }
