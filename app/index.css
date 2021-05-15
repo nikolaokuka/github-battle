@@ -39,3 +39,11 @@ li {
   text-decoration: none;
   color: inherit;
 }
+
+.center-text {
+  text-align: center;
+}
+
+.error-msg {
+  color: crimson;
+}
