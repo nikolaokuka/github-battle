@@ -29,7 +29,7 @@ LanguagesNav.propTypes = {
 export default class Popular extends Component {
   state = {
     selected: 'All',
-    repos: null,
+    repos: {},
     error: null,
     loading: true
   }
@@ -41,27 +41,33 @@ export default class Popular extends Component {
   updateLanguage = (language) => {
     this.setState({
       selected: language,
-      repos: null,
       loading: true,
       error: null
     })
 
-    getPopularRepos(language)
-      .then((data) => {
-        this.setState({
-          repos: data,
-          error: null,
-          loading: false
+    if (!this.state.repos[language]) {
+      getPopularRepos(language)
+        .then((data) => {
+          this.setState(({ repos }) => ({
+            repos: {
+              ...repos,
+              [language]: data
+            },
+            error: null,
+            loading: false
+          }))
         })
-      })
-      .catch(({ message }) => {
-        console.warn(message)
+        .catch(({ message }) => {
+          console.warn(message)
 
-        this.setState({
-          error: `Error fetching ${language} repos.`,
-          loading: false
+          this.setState({
+            error: `Error fetching ${language} repos.`,
+            loading: false
+          })
         })
-      })
+    } else {
+      this.setState({ loading: false })
+    }
   }
 
   render() {
@@ -78,7 +84,7 @@ export default class Popular extends Component {
 
         {loading && <p className='center-text'>Loading...</p>}
 
-        {repos && <pre>{JSON.stringify(repos, null, 2)}</pre>}
+        {repos[selected] && <pre>{JSON.stringify(repos[selected], null, 2)}</pre>}
       </>
     )
   }
