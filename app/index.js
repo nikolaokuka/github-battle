@@ -1,12 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import Popular from './components/Popular'
+import Battle from './components/Battle'
 import './index.css'
 
-function App () {
+function App() {
   return (
     <div className='container'>
-      <Popular />
+      <Battle />
     </div>
   )
 }
