@@ -1,6 +1,7 @@
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { FaUserFriends, FaFighterJet, FaTrophy, FaTimesCircle } from 'react-icons/fa'
+import Results from './Results'
 
 function Instructions() {
   return (
@@ -102,7 +103,8 @@ function PlayerPreview({ username, label, onReset }) {
 export default class Battle extends Component {
   state = {
     playerOne: null,
-    playerTwo: null
+    playerTwo: null,
+    battle: false
   }
 
   handleSubmit = (id, player) => {
@@ -118,7 +120,16 @@ export default class Battle extends Component {
   }
 
   render() {
-    const { playerOne, playerTwo } = this.state
+    const { playerOne, playerTwo, battle } = this.state
+
+    if (battle) {
+      return (
+        <Results
+          playerOne={playerOne}
+          playerTwo={playerTwo}
+        />
+      )
+    }
 
     return (
       <>
@@ -151,6 +162,14 @@ export default class Battle extends Component {
               />
             }
           </div>
+
+          {playerOne && playerTwo &&
+            <button
+              className='btn btn-dark btn-space'
+              onClick={() => this.setState({ battle: true })}>
+              Battle
+            </button>
+          }
         </div>
       </>
     )
