@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import PropTypes from 'prop-types'
 import { FaUserFriends, FaFighterJet, FaTrophy } from 'react-icons/fa'
 
 function Instructions() {
@@ -23,11 +24,92 @@ function Instructions() {
   )
 }
 
-export default class Battle extends Component {
+class PlayerInput extends Component {
+  static propTypes = {
+    label: PropTypes.string.isRequired,
+    onSubmit: PropTypes.func.isRequired
+  }
+
+  state = {
+    username: ''
+  }
+
+  handleSubmit = (e) => {
+    e.preventDefault()
+    this.props.onSubmit(this.state.username)
+  }
+
+  handleChange = (e) => {
+    this.setState({
+      username: e.target.value
+    })
+  }
+
   render() {
+    return (
+      <form className='column player' onSubmit={this.handleSubmit}>
+        <label htmlFor='username' className='player-label'>
+          {this.props.label}
+        </label>
+        <div className='row player-inputs'>
+          <input
+            type='text'
+            id='username'
+            className='input-light'
+            placeholder='github username'
+            autoComplete='off'
+            value={this.state.username}
+            onChange={this.handleChange}
+          />
+          <button
+            type='submit'
+            className='btn btn-dark'
+            disabled={!this.state.username}>
+            Submit
+          </button>
+        </div>
+      </form>
+    )
+  }
+}
+
+export default class Battle extends Component {
+  state = {
+    playerOne: null,
+    playerTwo: null
+  }
+
+  handleSubmit = (id, player) => {
+    this.setState({
+      [id]: player
+    })
+  }
+
+  render() {
+    const { playerOne, playerTwo } = this.state
+
     return (
       <>
         <Instructions />
+
+        <div className='players-container'>
+          <h1 className='center-text header-lg'>Players</h1>
+          <div className='row space-around'>
+            {!playerOne && (
+              <PlayerInput
+                label='Player One'
+                onSubmit={(player) => this.handleSubmit('playerOne', player)}
+              />
+            )}
+
+            {!playerTwo && (
+              <PlayerInput
+                label='Player Two'
+                onSubmit={(player) => this.handleSubmit('playerTwo', player)}
+              />
+            )}
+          </div>
+        </div>
       </>
     )
   }
