@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { getPopularRepos } from '../utils/api'
 import { FaUser, FaStar, FaCodeBranch, FaExclamationTriangle } from 'react-icons/fa'
 import Card from './Card'
+import Loading from './Loading'
 
 function LanguagesNav({ selected, updateLanguage }) {
   const languages = ['All', 'JavaScript', 'Ruby', 'Java', 'CSS', 'Python']
@@ -131,7 +132,7 @@ export default class Popular extends Component {
 
         {error && <p className='center-text error-msg'>{error}</p>}
 
-        {loading && <p className='center-text'>Loading...</p>}
+        {loading && <Loading text='Fetching repos' />}
 
         {repos[selected] && <ReposGrid repos={repos[selected]} />}
       </>

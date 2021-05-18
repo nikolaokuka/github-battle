@@ -3,6 +3,7 @@ import { battle } from '../utils/api'
 import { FaCompass, FaBriefcase, FaUsers, FaUserFriends, FaCode, FaUser } from 'react-icons/fa'
 import Card from './Card'
 import PropTypes from 'prop-types'
+import Loading from './Loading'
 
 function CardList({ profile }) {
   return (
@@ -75,7 +76,7 @@ export default class Results extends Component {
     }
 
     if (loading) {
-      return <p className='center-text'>Loading...</p>
+      return <Loading text='Battling' />
     }
 
     return (
