@@ -79,27 +79,34 @@ export default class Results extends Component {
     }
 
     return (
-      <div className='grid space-around container-sm'>
-        <Card
-          header={winner.score === loser.score ? 'Tie' : 'Winner'}
-          avatar={winner.profile.avatar_url}
-          username={winner.profile.login}
-          score={`Score: ${winner.score.toLocaleString()}`}
-          url={winner.profile.html_url}
-        >
-          <CardList profile={winner.profile} />
-        </Card>
+      <>
+        <div className='grid space-around container-sm'>
+          <Card
+            header={winner.score === loser.score ? 'Tie' : 'Winner'}
+            avatar={winner.profile.avatar_url}
+            username={winner.profile.login}
+            score={`Score: ${winner.score.toLocaleString()}`}
+            url={winner.profile.html_url}
+          >
+            <CardList profile={winner.profile} />
+          </Card>
 
-        <Card
-          header={winner.score === loser.score ? 'Tie' : 'Loser'}
-          avatar={loser.profile.avatar_url}
-          username={loser.profile.login}
-          score={`Score: ${loser.score.toLocaleString()}`}
-          url={loser.profile.html_url}
-        >
-          <CardList profile={loser.profile} />
-        </Card>
-      </div>
+          <Card
+            header={winner.score === loser.score ? 'Tie' : 'Loser'}
+            avatar={loser.profile.avatar_url}
+            username={loser.profile.login}
+            score={`Score: ${loser.score.toLocaleString()}`}
+            url={loser.profile.html_url}
+          >
+            <CardList profile={loser.profile} />
+          </Card>
+        </div>
+        <button
+          className='btn btn-dark btn-space'
+          onClick={this.props.onReset}>
+          Reset
+        </button>
+      </>
     )
   }
 }
