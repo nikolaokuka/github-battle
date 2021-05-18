@@ -35,7 +35,7 @@ function ReposGrid({ repos }) {
         const { login, avatar_url } = owner
 
         return (
-          <li className='repo bg-light' key={html_url}>
+          <li className='card bg-light' key={html_url}>
             <h4 className='header-lg center-text'>#{index + 1}</h4>
             <img
               className='avatar'
