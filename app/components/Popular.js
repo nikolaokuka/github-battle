@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 import { getPopularRepos } from '../utils/api'
 import { FaUser, FaStar, FaCodeBranch, FaExclamationTriangle } from 'react-icons/fa'
+import Card from './Card'
 
 function LanguagesNav({ selected, updateLanguage }) {
   const languages = ['All', 'JavaScript', 'Ruby', 'Java', 'CSS', 'Python']
@@ -35,36 +36,34 @@ function ReposGrid({ repos }) {
         const { login, avatar_url } = owner
 
         return (
-          <li className='card bg-light' key={html_url}>
-            <h4 className='header-lg center-text'>#{index + 1}</h4>
-            <img
-              className='avatar'
-              src={avatar_url}
-              alt={`Avatar for ${login}`}
-            />
-            <h2 className='center-text'>
-              <a className='link' href={html_url}>{login}</a>
-            </h2>
-            <ul className='card-list'>
-              <li>
-                <FaUser color='rgb(255, 191, 116)' size={22} />
-                <a href={`https://github.com/${login}`}>
-                  {login}
-                </a>
+          <li key={html_url}>
+            <Card
+              header={`#${index + 1}`}
+              username={login}
+              avatar={avatar_url}
+              url={html_url}
+            >
+              <ul className='card-list'>
+                <li>
+                  <FaUser color='rgb(255, 191, 116)' size={22} />
+                  <a href={`https://github.com/${login}`}>
+                    {login}
+                  </a>
+                </li>
+                <li>
+                  <FaStar color='rgb(255, 215, 0)' size={22} />
+                  {stargazers_count.toLocaleString()} stars
               </li>
-              <li>
-                <FaStar color='rgb(255, 215, 0)' size={22} />
-                {stargazers_count.toLocaleString()} stars
+                <li>
+                  <FaCodeBranch color='rgb(129, 195, 245)' size={22} />
+                  {forks.toLocaleString()} forks
               </li>
-              <li>
-                <FaCodeBranch color='rgb(129, 195, 245)' size={22} />
-                {forks.toLocaleString()} forks
+                <li>
+                  <FaExclamationTriangle color='rgb(241, 138, 147)' size={22} />
+                  {open_issues.toLocaleString()} open
               </li>
-              <li>
-                <FaExclamationTriangle color='rgb(241, 138, 147)' size={22} />
-                {open_issues.toLocaleString()} open
-              </li>
-            </ul>
+              </ul>
+            </Card>
           </li>
         )
       })}

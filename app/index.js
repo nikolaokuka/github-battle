@@ -7,7 +7,7 @@ import './index.css'
 function App() {
   return (
     <div className='container'>
-      <Battle />
+      <Popular />
     </div>
   )
 }

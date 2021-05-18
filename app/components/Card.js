@@ -29,6 +29,6 @@ Card.propTypes = {
   header: PropTypes.string.isRequired,
   avatar: PropTypes.string.isRequired,
   username: PropTypes.string.isRequired,
-  score: PropTypes.string.isRequired,
+  score: PropTypes.string,
   url: PropTypes.string.isRequired,
 }
