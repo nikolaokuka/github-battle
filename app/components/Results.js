@@ -1,5 +1,7 @@
 import React, { Component } from 'react'
 import { battle } from '../utils/api'
+import queryString from 'query-string'
+import { Link } from 'react-router-dom'
 import { FaCompass, FaBriefcase, FaUsers, FaUserFriends, FaCode, FaUser } from 'react-icons/fa'
 import Card from './Card'
 import PropTypes from 'prop-types'
@@ -54,7 +56,7 @@ export default class Results extends Component {
   }
 
   componentDidMount() {
-    const { playerOne, playerTwo } = this.props
+    const { playerOne, playerTwo } = queryString.parse(this.props.location.search)
 
     battle([playerOne, playerTwo])
       .then(([winner, loser]) => {
@@ -107,11 +109,12 @@ export default class Results extends Component {
             <CardList profile={loser.profile} />
           </Card>
         </div>
-        <button
+        <Link
           className='btn btn-dark btn-space'
-          onClick={this.props.onReset}>
+          to='/battle'
+        >
           Reset
-        </button>
+        </Link>
       </>
     )
   }

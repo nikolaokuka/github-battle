@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import { BrowserRouter as Router, Route } from 'react-router-dom'
 import Popular from './components/Popular'
 import Battle from './components/Battle'
+import Results from './components/Results'
 import Nav from './components/Nav'
 import { ThemeProvider } from './contexts/theme'
 import './index.css'
@@ -24,7 +25,8 @@ class App extends Component {
               <Nav />
 
               <Route exact path='/' component={Popular} />
-              <Route path='/battle' component={Battle} />
+              <Route exact path='/battle' component={Battle} />
+              <Route path='/battle/results' component={Results} />
             </div>
           </div>
         </ThemeProvider>
