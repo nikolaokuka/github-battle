@@ -264,3 +264,7 @@ li {
 .btn-light:disabled {
   background: #292929;
 }
+
+.nav li {
+  margin-right: 10px;
+}
