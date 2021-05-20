@@ -12,10 +12,11 @@ const Results = React.lazy(() => import('./components/Results'))
 
 class App extends Component {
   state = {
-    theme: 'light',
-    toggleTheme: () => this.setState(({ theme }) => ({
-      theme: theme === 'light' ? 'dark' : 'light'
-    }))
+    theme: localStorage.getItem('theme') ? localStorage.getItem('theme') : 'light',
+    toggleTheme: () => {
+      this.setState(({ theme }) => ({ theme: theme === 'light' ? 'dark' : 'light' }))
+      localStorage.setItem('theme', this.state.theme === 'light' ? 'dark' : 'light')
+    }
   }
 
   render() {
