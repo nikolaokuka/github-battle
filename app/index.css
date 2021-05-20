@@ -57,6 +57,10 @@ li {
   justify-content: space-around;
 }
 
+.space-between {
+  justify-content: space-between;
+}
+
 .header-lg {
   font-size: 35px;
   font-weight: 300;
@@ -234,4 +238,29 @@ li {
 
 .btn-space {
   margin: 40px auto;
+}
+
+.dark {
+  color: #dadada;
+  background: #1c2022;
+  min-height: 100%;
+}
+
+.bg-dark {
+  background: rgb(36, 40, 42);
+  border-radius: 3px;
+}
+
+.player-inputs .input-dark {
+  color: #dadada;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.btn-light {
+  color: #000;
+  background: #aaa8a8;
+}
+
+.btn-light:disabled {
+  background: #292929;
 }
