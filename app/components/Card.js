@@ -5,7 +5,7 @@ import { ThemeConsumer } from '../contexts/theme'
 export default function Card({ header, avatar, username, score, url, children }) {
   return (
     <ThemeConsumer>
-      {({ theme }) => (
+      {(theme) => (
         <div className={`card bg-${theme}`}>
           <h4 className='header-lg center-text'>
             {header}
