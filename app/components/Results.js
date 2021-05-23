@@ -1,8 +1,8 @@
-import React, { Component } from 'react'
+import React, { useReducer, useEffect } from 'react'
 import { battle } from '../utils/api'
 import queryString from 'query-string'
 import { Link } from 'react-router-dom'
-import { FaCompass, FaBriefcase, FaUsers, FaUserFriends, FaCode, FaUser } from 'react-icons/fa'
+import { FaCompass, FaBriefcase, FaUsers, FaUserFriends, FaUser } from 'react-icons/fa'
 import Card from './Card'
 import PropTypes from 'prop-types'
 import Loading from './Loading'
@@ -47,75 +47,87 @@ CardList.propTypes = {
   profile: PropTypes.object.isRequired,
 }
 
-export default class Results extends Component {
-  state = {
+function resultsReducer(state, action) {
+  switch(action.type) {
+    case 'success':
+      return {
+        winner: action.winner,
+        loser: action.loser,
+        error: null,
+        loading: false
+      }
+    case 'error':
+      return {
+        ...state,
+        error: action.message,
+        loading: false
+      }
+    case 'fetch':
+      return {
+        ...state,
+        loading: true
+      }
+    default:
+      throw new Error(`Action type isn't supported.`)
+  }
+}
+
+export default function Results({ location }) {
+  const { playerOne, playerTwo } = queryString.parse(location.search)
+  const [state, dispatch] = useReducer(resultsReducer, {
     winner: null,
-    loser: null,
+    loaser: null,
     error: null,
     loading: true
-  }
+  })
 
-  componentDidMount() {
-    const { playerOne, playerTwo } = queryString.parse(this.props.location.search)
+  useEffect(() => {
+    dispatch({ type: 'fetch' })
 
     battle([playerOne, playerTwo])
-      .then(([winner, loser]) => {
-        this.setState({
-          winner,
-          loser,
-          error: null,
-          loading: false
-        })
-      })
-      .catch(({ message }) => {
-        this.setState({
-          error: message,
-          loading: false
-        })
-      })
+      .then(([winner, loser]) => dispatch({ type: 'success', winner, loser }))
+      .catch(({ message }) => dispatch({ type: 'error', message }))
+  }, [playerOne, playerTwo])
+
+  const { winner, loser, error, loading } = state
+
+  if (error) {
+    return <p className='center-text error-msg'>{error}</p>
   }
 
-  render() {
-    const { winner, loser, error, loading } = this.state
+  if (loading) {
+    return <Loading text='Battling' />
+  }
 
-    if (error) {
-      return <p className='center-text error-msg'>{error}</p>
-    }
-
-    if (loading) {
-      return <Loading text='Battling' />
-    }
-
-    return (
-      <>
-        <div className='grid space-around container-sm'>
-          <Card
-            header={winner.score === loser.score ? 'Tie' : 'Winner'}
-            avatar={winner.profile.avatar_url}
-            username={winner.profile.login}
-            score={`Score: ${winner.score.toLocaleString()}`}
-            url={winner.profile.html_url}
-          >
-            <CardList profile={winner.profile} />
-          </Card>
-
-          <Card
-            header={winner.score === loser.score ? 'Tie' : 'Loser'}
-            avatar={loser.profile.avatar_url}
-            username={loser.profile.login}
-            score={`Score: ${loser.score.toLocaleString()}`}
-            url={loser.profile.html_url}
-          >
-            <CardList profile={loser.profile} />
-          </Card>
-        </div>
-        <Link
-          className='btn btn-dark btn-space'
-          to='/battle'
+  return (
+    <>
+      <div className='grid space-around container-sm'>
+        <Card
+          header={winner.score === loser.score ? 'Tie' : 'Winner'}
+          avatar={winner.profile.avatar_url}
+          username={winner.profile.login}
+          score={`Score: ${winner.score.toLocaleString()}`}
+          url={winner.profile.html_url}
         >
-          Reset
-        </Link>
-      </>
-    )
-  }
+          <CardList profile={winner.profile} />
+        </Card>
+
+        <Card
+          header={winner.score === loser.score ? 'Tie' : 'Loser'}
+          avatar={loser.profile.avatar_url}
+          username={loser.profile.login}
+          score={`Score: ${loser.score.toLocaleString()}`}
+          url={loser.profile.html_url}
+        >
+          <CardList profile={loser.profile} />
+        </Card>
+      </div>
+      <Link
+        className='btn btn-dark btn-space'
+        to='/battle'
+      >
+        Reset
+      </Link>
+    </>
+  )
 }

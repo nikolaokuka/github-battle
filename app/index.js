@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import ReactDOM from 'react-dom'
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom'
 import Loading from './components/Loading'
@@ -10,37 +10,34 @@ const Popular = React.lazy(() => import('./components/Popular'))
 const Battle = React.lazy(() => import('./components/Battle'))
 const Results = React.lazy(() => import('./components/Results'))
 
-class App extends Component {
-  state = {
-    theme: localStorage.getItem('theme') ? localStorage.getItem('theme') : 'light',
-    toggleTheme: () => {
-      this.setState(({ theme }) => ({ theme: theme === 'light' ? 'dark' : 'light' }))
-      localStorage.setItem('theme', this.state.theme === 'light' ? 'dark' : 'light')
-    }
+function App() {
+  const storagedTheme = localStorage.getItem('theme')
+  const [theme, setTheme] = useState(storagedTheme ? storagedTheme : 'light')
+  const toggleTheme = () => {
+    setTheme((theme) => theme === 'light' ? 'dark' : 'light')
+    localStorage.setItem('theme', theme === 'light' ? 'dark' : 'light')
   }
 
-  render() {
-    return (
-      <Router>
-        <ThemeProvider value={this.state}>
-          <div className={this.state.theme}>
-            <div className='container'>
-              <Nav />
+  return (
+    <Router>
+      <ThemeProvider value={theme}>
+        <div className={theme}>
+          <div className='container'>
+            <Nav toggleTheme={toggleTheme} />
 
-              <React.Suspense fallback={<Loading />}>
-                <Switch>
-                  <Route exact path='/' component={Popular} />
-                  <Route exact path='/battle' component={Battle} />
-                  <Route path='/battle/results' component={Results} />
-                  <Route render={() => <h1>404</h1>} />
-                </Switch>
-              </React.Suspense>
-            </div>
+            <React.Suspense fallback={<Loading />}>
+              <Switch>
+                <Route exact path='/' component={Popular} />
+                <Route exact path='/battle' component={Battle} />
+                <Route path='/battle/results' component={Results} />
+                <Route render={() => <h1>404</h1>} />
+              </Switch>
+            </React.Suspense>
           </div>
-        </ThemeProvider>
-      </Router>
-    )
-  }
+        </div>
+      </ThemeProvider>
+    </Router>
+  )
 }
 
 ReactDOM.render(
