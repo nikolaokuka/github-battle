@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, useEffect, useReducer, useState } from 'react'
 import PropTypes from 'prop-types'
 import { getPopularRepos } from '../utils/api'
 import { FaUser, FaStar, FaCodeBranch, FaExclamationTriangle } from 'react-icons/fa'
@@ -79,66 +79,50 @@ ReposGrid.propTypes = {
   repos: PropTypes.array.isRequired
 }
 
-export default class Popular extends Component {
-  state = {
-    selected: 'All',
-    repos: {},
-    error: null,
-    loading: true
+function popularReducer(state, action) {
+  switch (action.type) {
+    case 'success':
+      return {
+        ...state,
+        [action.selected]: action.repos,
+        error: null
+      }
+    case 'error':
+      return {
+        ...state,
+        error: action.message,
+      }
+    default:
+      throw new Error(`Action type doesn't exist.`)
   }
+}
 
-  componentDidMount() {
-    this.updateLanguage(this.state.selected)
-  }
+export default function Popular() {
+  const [selected, setSelected] = useState('All')
+  const [state, dispatch] = useReducer(popularReducer, { error: null })
 
-  updateLanguage = (language) => {
-    this.setState({
-      selected: language,
-      loading: true,
-      error: null
-    })
-
-    if (!this.state.repos[language]) {
-      getPopularRepos(language)
-        .then((data) => {
-          this.setState(({ repos }) => ({
-            repos: {
-              ...repos,
-              [language]: data
-            },
-            error: null,
-            loading: false
-          }))
-        })
-        .catch(({ message }) => {
-          console.warn(message)
-
-          this.setState({
-            error: `Error fetching ${language} repos.`,
-            loading: false
-          })
-        })
-    } else {
-      this.setState({ loading: false })
+  useEffect(() => {
+    if (!state[selected]) {
+      getPopularRepos(selected)
+        .then((repos) => dispatch({ type: 'success', repos, selected }))
+        .catch(({ message }) => dispatch({ type: 'error', message }))
     }
-  }
+  }, [selected])
 
-  render() {
-    const { selected, repos, error, loading } = this.state
+  const isLoading = () => !state[selected] && state.error === null
 
-    return (
-      <>
-        <LanguagesNav
-          selected={selected}
-          updateLanguage={this.updateLanguage}
-        />
+  return (
+    <>
+      <LanguagesNav
+        selected={selected}
+        updateLanguage={setSelected}
+      />
 
-        {error && <p className='center-text error-msg'>{error}</p>}
+      {state.error && <p className='center-text error-msg'>{state.error}</p>}
 
-        {loading && <Loading text='Fetching repos' />}
+      {isLoading() && <Loading text='Fetching repos' />}
 
-        {repos[selected] && <ReposGrid repos={repos[selected]} />}
-      </>
-    )
-  }
+      {state[selected] && <ReposGrid repos={state[selected]} />}
+    </>
+  )
 }
